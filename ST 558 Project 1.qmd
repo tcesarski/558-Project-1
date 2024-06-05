@@ -1,0 +1,185 @@
+---
+title: "ST 558 Project 1"
+format: html
+author: "Taylor Cesarski and Trevor Lynch"
+---
+This code chunk does not involve functions.
+```{r}
+library(tidyverse)
+#Read in edu_data_a using read_csv and give a local path.
+edu_data_a <-read_csv("EDU01a.csv")
+edu_data_a
+
+#Overwrite data set. Select only columns Area_name, STCOU, and all columns ending with D. Rename the Area_name as area_name and pivot longer on columns 87-96. Then print out the dataframe.
+edu_data_a <- edu_data_a |>
+  select(Area_name, STCOU, ends_with("D")) |>
+  rename(area_name = Area_name) |>
+  pivot_longer(cols = EDU010187D:EDU010196D,
+               names_to = "time",
+               values_to = "enrollment")
+edu_data_a
+
+#Create a new vector called Year_Date of length 31980 because that is the number of rows in the dataset.
+Year_Date <- numeric(31980)
+
+#Loop through all rows (31980) and get the 8th and 9th characters in the string corresponding to last two years of the date. Convert to a numeric variable. Then if the number is less than 20 (such as 5), add 2000 to end up with 2005. Otherwise add 1900 to get something like 1987. Then store those values in the initialized vector called Year_Date.
+
+for(i in 1:31980){
+  time_year <- substr(edu_data_a$time[i],8,9)
+  year_numeric <- as.numeric(time_year)
+  
+year_numeric <- ifelse(year_numeric < 20, year_numeric + 2000, year_numeric + 1900) 
+
+Year_Date[i] <- year_numeric
+}
+
+#Create a numeric vector called measurement that is 31980 characters. Loop through taking the 1st-7th characters and store those in the initialized measurement vector.
+
+measurement <- numeric(31980)
+for(i in 1:31980){
+  measurement_type <- substr(edu_data_a$time[i], 1, 7)
+measurement[i] <- measurement_type
+}
+
+#Take the original data set and add columns for Year_Date and measurment as created above. Then get rid of the time variable where the strings came from because it is no longer needed.
+edu_data_a <- edu_data_a |>
+  mutate(Year_Date = Year_Date,
+         Measurement = measurement) |>
+  select(-time)
+
+
+#Create two data sets for county and non county data. This gets the indices for where the pattern of County, DD where DD is the state holds.
+county_indices <- grep(pattern = ", \\w\\w", edu_data_a$area_name)
+
+#Create new dataset called county_data with all the rows in the indices above.
+county_data <- edu_data_a |>
+  filter(row_number() %in% county_indices)
+county_data
+#Add a class called county.
+class(county_data) <- c("county", class(county_data))
+class(county_data)
+
+
+#Create new dataset called non_county_data with all the rows not in the indices above.
+non_county_data <- edu_data_a |>
+  filter(!row_number() %in% county_indices)
+non_county_data
+#Add a class called state.
+class(non_county_data) <- c("state", class(non_county_data))
+
+
+state_name <- character(31450)
+for(i in 1:31450){
+  state_info <- substr(county_data$area_name[i], nchar(county_data$area_name[i]) -1, nchar(county_data$area_name[i]))
+
+state_name[i] <- state_info
+}
+county_data <- county_data |>
+  mutate(State_Name = state_name)
+
+county_data
+
+#Create divisions.
+non_county_data
+division <- character(530)
+for(i in 1:530){
+division[i] <-
+  ifelse(non_county_data$area_name[i] %in% c("CONNECTICUT", "MAINE", "MASSACHUSETTS", "NEW HAMPSHIRE", "RHODE ISLAND", "VERMONT"), "New England", 
+         ifelse(non_county_data$area_name[i] %in% c("NEW JERSEY", "NEW YORK", "PENNSYLVANIA"), "Middle Atlantic",
+                ifelse(non_county_data$area_name[i] %in% c("ILLINOIS", "INDIANA", "MICHIGAN", "OHIO", "WISCONSIN"), "East North Central",
+                       ifelse(non_county_data$area_name[i] %in% c("IOWA", "KANSAS", "MINNESOTA", "MISSOURI", "NEBRASKA", "NORTH DAKOTA", "SOUTH DAKOTA"), "West North Central",
+                              ifelse(non_county_data$area_name[i] %in% c("DELAWARE", "FLORIDA", "GEORGIA", "MARYLAND", "NORTH CAROLINA", "SOUTH CAROLINA", "VIRGINIA", "DISTRICT OF COLUMBIA", "District of Columbia", "WEST VIRGINIA"), "South Atlantic",
+                                     ifelse(non_county_data$area_name[i] %in% c("ALABAMA", "KENTUCKY", "MISSISSIPPI", "TENNESSEE"), "East South Central",
+                                            ifelse(non_county_data$area_name[i] %in% c("ARKANSAS", "LOUSIANA", "OKLAHOMA", "TEXAS"), "West South Central",
+                                                   ifelse(non_county_data$area_name[i] %in% c("ARIZONA", "COLORADO", "IDAHO", "MONTANA", "NEVADA", "NEW MEXICO", "UTAH", "WYOMING"), "Mountain",
+                                                          ifelse(non_county_data$area_name[i] %in% c("ALASKA", "CALIFORNIA", "HAWAII", "OREGON", "WASHINGTON"), "Pacific",
+           "Error")))))))))
+}
+division
+
+non_county_data <- non_county_data |>
+  mutate(Division = division)
+```
+
+This code chunk is starting to write the functions.
+```{r}
+#Function for steps 1 & 2
+edu_data_b <- read_csv("EDU01b.csv")
+
+education_data <- function(data, values = "Enrollment"){
+  new_df <- data |>
+    select(Area_name, STCOU, ends_with("D")) |>
+    rename(area_name = Area_name) |>
+    pivot_longer(cols = 3:12,
+               names_to = "time",
+               values_to = values)
+  
+  return(new_df)
+}
+#Function for Step 3
+new_function <- function(new_df){
+  Year_Date <- numeric(31980)
+  for(i in 1:31980){
+  time_year <- substr(new_df$time[i],8,9)
+  year_numeric <- as.numeric(time_year)
+  
+year_numeric <- ifelse(year_numeric < 20, year_numeric + 2000, year_numeric + 1900) 
+
+Year_Date[i] <- year_numeric
+  }
+  
+  measurement <- character(31980)
+for(i in 1:31980){
+  measurement_type <- substr(new_df$time[i], 1, 7)
+measurement[i] <- measurement_type
+}
+new_df |>
+  mutate(Year_Date = Year_Date,
+         Measurement = measurement) |>
+  select(-time)
+  
+}
+
+new_edu_data_b <- education_data(edu_data_b)
+new_edu_data_b
+new_function(new_edu_data_b)
+
+#Function for Step 5.
+
+add_state<- function(input){
+  state_name <- character(nrow(input))
+  for(i in seq_along(input$area_name)){
+  state_info <- substr(input$area_name[i], nchar(input$area_name[i]) -1, nchar(input$area_name[i]))
+
+state_name[i] <- state_info
+  }
+  return(input |>
+    mutate(State = state_name))
+}
+
+
+#Function to do Step 6
+
+add_division <- function(data_input){
+  division <- character(nrow(data_input))
+  for(i in seq_along(data_input$area_name)){
+    division[i] <-
+  ifelse(data_input$area_name[i] %in% c("CONNECTICUT", "MAINE", "MASSACHUSETTS", "NEW HAMPSHIRE", "RHODE ISLAND", "VERMONT"), "New England", 
+         ifelse(data_input$area_name[i] %in% c("NEW JERSEY", "NEW YORK", "PENNSYLVANIA"), "Middle Atlantic",
+                ifelse(data_input$area_name[i] %in% c("ILLINOIS", "INDIANA", "MICHIGAN", "OHIO", "WISCONSIN"), "East North Central",
+                       ifelse(data_input$area_name[i] %in% c("IOWA", "KANSAS", "MINNESOTA", "MISSOURI", "NEBRASKA", "NORTH DAKOTA", "SOUTH DAKOTA"), "West North Central",
+                              ifelse(data_input$area_name[i] %in% c("DELAWARE", "FLORIDA", "GEORGIA", "MARYLAND", "NORTH CAROLINA", "SOUTH CAROLINA", "VIRGINIA", "DISTRICT OF COLUMBIA", "District of Columbia", "WEST VIRGINIA"), "South Atlantic",
+                                     ifelse(data_input$area_name[i] %in% c("ALABAMA", "KENTUCKY", "MISSISSIPPI", "TENNESSEE"), "East South Central",
+                                            ifelse(data_input$area_name[i] %in% c("ARKANSAS", "LOUSIANA", "OKLAHOMA", "TEXAS"), "West South Central",
+                                                   ifelse(data_input$area_name[i] %in% c("ARIZONA", "COLORADO", "IDAHO", "MONTANA", "NEVADA", "NEW MEXICO", "UTAH", "WYOMING"), "Mountain",
+                                                          ifelse(data_input$area_name[i] %in% c("ALASKA", "CALIFORNIA", "HAWAII", "OREGON", "WASHINGTON"), "Pacific",
+           "Error")))))))))
+  }
+return(data_input |>
+  mutate(Division = division))
+  
+}
+```
+
+
+
