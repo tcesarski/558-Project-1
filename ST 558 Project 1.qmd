@@ -3,8 +3,8 @@ title: "ST 558 Project 1"
 format: html
 author: "Taylor Cesarski and Trevor Lynch"
 ---
-This code chunk does not involve functions.
-```{r}
+This code chunk does not involve functions. Original work. Will remove with final submission. Currently set to not evaluate or show. 
+```{r, echo = FALSE, eval = FALSE}
 library(tidyverse)
 #Read in edu_data_a using read_csv and give a local path.
 edu_data_a <-read_csv("EDU01a.csv")
@@ -100,11 +100,15 @@ division
 non_county_data <- non_county_data |>
   mutate(Division = division)
 ```
+```{r, echo = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+
 
 This code chunk is starting to write the functions.
 ```{r}
-#Function for steps 1 & 2
-edu_data_b <- read_csv("EDU01b.csv")
+#Function for steps 1 & 2. This function is taking in a dataset and has a default arugment of "Enrollment". It then creates a new data frame called new_df and selects only the columns called Area_name, STCOU, and any column ending with D. It is renaming the Area_name column as area_name and pivoting longer on columns 3 through 12. It is taking the names to "time" and the values_to the values column as given by the argument. It then returns the new_df.
 
 education_data <- function(data, values = "Enrollment"){
   new_df <- data |>
@@ -116,23 +120,29 @@ education_data <- function(data, values = "Enrollment"){
   
   return(new_df)
 }
-#Function for Step 3
-new_function <- function(new_df){
-  Year_Date <- numeric(31980)
-  for(i in 1:31980){
-  time_year <- substr(new_df$time[i],8,9)
-  year_numeric <- as.numeric(time_year)
+
+#Function for Step 3. This is a function called year_function that takes in new_df (the output of the previous function). It initializes a numeric vector of length of the number of rows of the input, new_df. Then, using a for loop it loops through all iterations of the time column of the new_df and takes the 8th and 9th strings. Then it takes that value and converts it to a numeric variable. Then, if that number is less than 20, it adds 2000 so for example if the number was 03 it would change to 2003. Otherwise, add 1900 to get something like 1997. Since there are no data values in the 1920s or earlier, this pattern will hold. It is storing each of these values in the initial vector created. 
+year_function <- function(new_df){
+  Year_Date <- numeric(nrow(new_df))
   
-year_numeric <- ifelse(year_numeric < 20, year_numeric + 2000, year_numeric + 1900) 
+  for(i in seq_along(new_df$time)){
+    time_year <- substr(new_df$time[i],8,9)
+    year_numeric <- as.numeric(time_year)
+  
+year_numeric <- ifelse(year_numeric < 20, 
+                       year_numeric + 2000, 
+                       year_numeric + 1900) 
 
 Year_Date[i] <- year_numeric
   }
-  
-  measurement <- character(31980)
-for(i in 1:31980){
+#This section initializes a new character vector called measurement that is the legnth of the number of rows of the input, new_df. It then loops through the time column of new_df and pulls the 1st through 7th strings and stores then in the measurement vector. 
+  measurement <- character(nrow(new_df))
+for(i in seq_along(new_df$time)){
   measurement_type <- substr(new_df$time[i], 1, 7)
-measurement[i] <- measurement_type
+
+  measurement[i] <- measurement_type
 }
+#Then it takes the new_df and adds columns for Year_Date and Measurement. It gets rid of the time column since that is no longer needed since we pulled the information from it.
 new_df |>
   mutate(Year_Date = Year_Date,
          Measurement = measurement) |>
@@ -140,17 +150,14 @@ new_df |>
   
 }
 
-new_edu_data_b <- education_data(edu_data_b)
-new_edu_data_b
-new_function(new_edu_data_b)
 
-#Function for Step 5.
-
+#Function for Step 5.This creates a function called add_state that first creates a character vector called state_name that is the length of the number of rows in the inputted dataset. Then, it loops through the area_name column and creates a new vector called state_info that takes the area_name column and looks at the second to last string and the last string there. Then it stores each of these in the ith element of the state_name character vector initially created. It returns the initial dataset with an added column called State.
 add_state<- function(input){
   state_name <- character(nrow(input))
   for(i in seq_along(input$area_name)){
-  state_info <- substr(input$area_name[i], nchar(input$area_name[i]) -1, nchar(input$area_name[i]))
-
+    state_info <- substr(input$area_name[i], 
+                       nchar(input$area_name[i]) -1, 
+                       nchar(input$area_name[i]))
 state_name[i] <- state_info
   }
   return(input |>
@@ -158,8 +165,7 @@ state_name[i] <- state_info
 }
 
 
-#Function to do Step 6
-
+#Function to do Step 6. This function is called add_division. It first initalizes a vector called division that is a character vector of the length of the number of rows in the inputted dataset. It then loops through each element of the area_name column and assigns the element of the division vector based on if it matches a state name. If it doesn't, it moves onto the next one. If it doesn't match any state name, it returns error such as for the United States. Then it takes the initial dataset and adds a column corresponding to division.
 add_division <- function(data_input){
   division <- character(nrow(data_input))
   for(i in seq_along(data_input$area_name)){
@@ -179,6 +185,45 @@ return(data_input |>
   mutate(Division = division))
   
 }
+
+#Function for step 4. This function first creates a vector called county_indices that looks for the pattern such as Wake, NC where the first part corresponds to the county and the last two to the state. Then it filters to only look at the row numbers in the county indices and assigns that to a tibble called county_data. Finally it assigns a class called county. Then it applies the add_state function above to the county tibble to create a new tibble called add_state_info.
+new_tibbles <- function(input_data){
+  county_indices <- grep(pattern = ", \\w\\w", input_data$area_name)
+  county_data <- input_data |>
+  filter(row_number() %in% county_indices)
+ class(county_data) <- c("county", class(county_data))
+ 
+ add_state_info <-add_state(county_data)
+ 
+#For any row numbers not in the county indices, it assigns them to a tibble called non_county_data and creates a class called state. Then it applies the add_division function above to add the division to this tibble.
+ non_county_data <- input_data |>
+  filter(!row_number() %in% county_indices)
+class(non_county_data) <- c("state", class(non_county_data))
+
+add_division_info <- add_division(non_county_data)
+
+#It returns a list of two tibbles. The first is called "County Data" and corresponds to the county data with the added state. The second is called "Non-County Data" and corresponds to the non-county data with the added divsion.
+return(list("County Data" = add_state_info, "Non-County Data" = add_division_info))
+
+}
+
+#This creates the wrapper function called wrapper_function that has the default values argument of "Enrollment" and passes this argument to the education_data function. It calls each function in order and returns a list with the two tibbles.
+
+wrapper_function <- function(url, values = "Enrollment"){
+  result <- read_csv(url) |>
+    education_data(values) |>
+    year_function() |>
+    new_tibbles()
+}
+#Call the function for the A dataset and name it edu_a.
+edu_a <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
+edu_a
+
+#Call the function for the B dataset and name it edu_b.
+edu_b <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
+edu_b
+
+
 ```
 
 > Adding a block quote here to test if I can push up to the main branch successfully. - Trevor Lynch
