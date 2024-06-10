@@ -145,4 +145,17 @@ edu_b <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.cs
 edu_b
 ```
 
+"Call It and Combine Your Data" section 
+```{r}
+# This function takes in two lists output from the wrapper_function and combines the County Data from both lists, combining the Non-County Data from both lists, and returns a list of those. 
+combine_both <- function(first_list, second_list){
+  combined_county <- dplyr::bind_rows(first_list[[1]], second_list[[1]])
+  combined_non_county <- dplyr::bind_rows(first_list[[2]], second_list[[2]])
+  
+  return(list("County Data" = combined_county, "Non-County Data" = combined_non_county))
+}
+
+#Call the function for the output objects from our wrapper_function
+combined_lists <- combine_both(edu_a,edu_b)
+```
 
