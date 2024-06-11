@@ -165,13 +165,12 @@ This function plots the mean values of enrollment by year for each Division, aft
 ```{r}
 plot.state <- function(df, values = "Enrollment"){
   G <- ggplot(df |> 
-    #remove the "ERROR" setting
+    #remove the "ERROR" Division values
     filter(Division != "Error") |>
-    #Use get(var_name) to reference the var_name in your call to mean(): mean(get(var_name))
-    #For this, think group_by along with summarize
+    #Use get function to reference the variable in your call to mean(): mean(get(values))
     group_by(Division, Year_Date) |>
     summarize("mean_enrollment" = mean(get(values))),
-    aes(x = Year_Date, y = mean_enrollment, color = Division, linetype = Division))
+  aes(x = Year_Date, y = mean_enrollment, color = Division, linetype = Division))
 #create a line plot with ggplot with appropriate aes() assignments
 G + geom_line() + labs(x = "Year", y = "Mean Enrollment", title = "Mean Enrollment by Division over Time")
 }
@@ -179,5 +178,33 @@ G + geom_line() + labs(x = "Year", y = "Mean Enrollment", title = "Mean Enrollme
 # Test running the code (to be deleted later)
 plot.state(edu_a$`Non-County Data`)
 ```
-
+## plot.county Function
+This function will take in a tibble/dataframe, along with a specific state (specified with a 2-character string), conditional logic to choose the head(, n = ) or tail(, n = ) of the dataframe 
+```{r}
+plot.county <- function(df, values = "Enrollment", input_state = "NC", choice = "top", num_obs = 5){
+  if (choice == "top"){
+    df |>
+    # Filter the data to only include observations from the state specified
+    filter(State == input_state) |>
+    # Find the mean enrollment for each Area_name and sort these values in descending order
+    group_by(area_name) |>
+    summarize("mean_enrollment" = mean(get(values))) |>
+    arrange(desc(mean_enrollment)) |>
+    # Obtain the top/bottom x number of area_name's depending on num_obs input 
+    head(n = num_obs)
+  } else {
+    df |>
+    # Filter the data to only include observations from the state specified
+    filter(State == input_state) |>
+    # Find the mean enrollment for each Area_name and sort these values in ascensing order
+    group_by(area_name) |>
+    summarize("mean_enrollment" = mean(get(values))) |>
+    arrange(mean_enrollment) |>
+    # Obtain the top/bottom x number of area_name's depending on num_obs input 
+    head(n = num_obs)
+  }
+}
+# Test running the code (to be deleted later)
+plot.county(edu_a$`County Data`, input_state = "NC", choice = "bott", num_obs = 25)
+```
 
