@@ -85,14 +85,14 @@ add_division <- function(data_input){
                        ifelse(data_input$area_name[i] %in% c("IOWA", "KANSAS", "MINNESOTA", "MISSOURI", "NEBRASKA", "NORTH DAKOTA", "SOUTH DAKOTA"), "West North Central",
                               ifelse(data_input$area_name[i] %in% c("DELAWARE", "FLORIDA", "GEORGIA", "MARYLAND", "NORTH CAROLINA", "SOUTH CAROLINA", "VIRGINIA", "DISTRICT OF COLUMBIA", "District of Columbia", "WEST VIRGINIA"), "South Atlantic",
                                      ifelse(data_input$area_name[i] %in% c("ALABAMA", "KENTUCKY", "MISSISSIPPI", "TENNESSEE"), "East South Central",
-                                            ifelse(data_input$area_name[i] %in% c("ARKANSAS", "LOUISIANA", "OKLAHOMA", "TEXAS"), "West South Central",
+                                            ifelse(data_input$area_name[i] %in% c("ARKANSAS", "LOUSIANA", "OKLAHOMA", "TEXAS"), "West South Central",
                                                    ifelse(data_input$area_name[i] %in% c("ARIZONA", "COLORADO", "IDAHO", "MONTANA", "NEVADA", "NEW MEXICO", "UTAH", "WYOMING"), "Mountain",
                                                           ifelse(data_input$area_name[i] %in% c("ALASKA", "CALIFORNIA", "HAWAII", "OREGON", "WASHINGTON"), "Pacific",
            "Error")))))))))
   }
 return(data_input |>
-  mutate(Division = division) |>
-  filter(area_name != "District of Columbia"))
+  mutate(Division = division))
+  
 }
 ```
 ## Step 4 Function with calling Steps 5 & 6 Function
@@ -169,11 +169,11 @@ plot.state <- function(df, values = "Enrollment"){
     filter(Division != "Error") |>
     #Use get(var_name) to reference the var_name in your call to mean(): mean(get(var_name))
     #For this, think group_by along with summarize
-    group_by(Year_Date) |>
-    summarize("mean_enrollment" = mean(get(values))))
-
+    group_by(Division, Year_Date) |>
+    summarize("mean_enrollment" = mean(get(values))),
+    aes(x = Year_Date, y = mean_enrollment, color = Division, linetype = Division))
 #create a line plot with ggplot with appropriate aes() assignments
-G + geom_line(aes(x = Year_Date, y = mean_enrollment))
+G + geom_line() + labs(x = "Year", y = "Mean Enrollment", title = "Mean Enrollment by Division over Time")
 }
 
 # Test running the code (to be deleted later)
