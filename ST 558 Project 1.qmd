@@ -85,14 +85,14 @@ add_division <- function(data_input){
                        ifelse(data_input$area_name[i] %in% c("IOWA", "KANSAS", "MINNESOTA", "MISSOURI", "NEBRASKA", "NORTH DAKOTA", "SOUTH DAKOTA"), "West North Central",
                               ifelse(data_input$area_name[i] %in% c("DELAWARE", "FLORIDA", "GEORGIA", "MARYLAND", "NORTH CAROLINA", "SOUTH CAROLINA", "VIRGINIA", "DISTRICT OF COLUMBIA", "District of Columbia", "WEST VIRGINIA"), "South Atlantic",
                                      ifelse(data_input$area_name[i] %in% c("ALABAMA", "KENTUCKY", "MISSISSIPPI", "TENNESSEE"), "East South Central",
-                                            ifelse(data_input$area_name[i] %in% c("ARKANSAS", "LOUSIANA", "OKLAHOMA", "TEXAS"), "West South Central",
+                                            ifelse(data_input$area_name[i] %in% c("ARKANSAS", "LOUISIANA", "OKLAHOMA", "TEXAS"), "West South Central",
                                                    ifelse(data_input$area_name[i] %in% c("ARIZONA", "COLORADO", "IDAHO", "MONTANA", "NEVADA", "NEW MEXICO", "UTAH", "WYOMING"), "Mountain",
                                                           ifelse(data_input$area_name[i] %in% c("ALASKA", "CALIFORNIA", "HAWAII", "OREGON", "WASHINGTON"), "Pacific",
            "Error")))))))))
   }
 return(data_input |>
-  mutate(Division = division))
-  
+  mutate(Division = division) |>
+  filter(area_name != "District of Columbia"))
 }
 ```
 ## Step 4 Function with calling Steps 5 & 6 Function
