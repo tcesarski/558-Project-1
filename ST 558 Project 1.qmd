@@ -58,7 +58,6 @@ new_df |>
 
 ## Step 5 Function
 This creates a function called add_state that first creates a character vector called state_name that is the length of the number of rows in the inputted dataset. Then, it loops through the area_name column and creates a new vector called state_info that takes the area_name column and looks at the second to last string and the last string there. Then it stores each of these in the ith element of the state_name character vector initially created. It returns the initial dataset with an added column called State.
-
 ```{r}
 add_state<- function(input){
   state_name <- character(nrow(input))
@@ -72,6 +71,7 @@ state_name[i] <- state_info
     mutate(State = state_name))
 }
 ```
+
 ## Step 6 Function
 This function is called add_division. It first initalizes a vector called division that is a character vector of the length of the number of rows in the inputted dataset. It then loops through each element of the area_name column and assigns the element of the division vector based on if it matches a state name. If it doesn't, it moves onto the next one. If it doesn't match any state name, it returns error such as for the United States. Then it takes the initial dataset and adds a column corresponding to division.
 ```{r}
@@ -145,7 +145,8 @@ edu_b <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.cs
 edu_b
 ```
 
-"Call It and Combine Your Data" section 
+## Combining Tibbles function 
+This short function takes in the results of two calls of the wrapper function and combines the tibbles into the County Data and Non-County Data tibbles. It returns a list of the same type, tho this time with the combined tibbles as the two list elements. The function is then called for the 2 output objects from the wrapper_function above.
 ```{r}
 # This function takes in two lists output from the wrapper_function and combines the County Data from both lists, combining the Non-County Data from both lists, and returns a list of those. 
 combine_both <- function(first_list, second_list){
@@ -159,5 +160,24 @@ combine_both <- function(first_list, second_list){
 combined_lists <- combine_both(edu_a,edu_b)
 ```
 
-Adding extra line
+## plot.state function
+This function plots the mean values of enrollment by year for each Division, after removing the Divisions with Error values. First, the function filters out the Division values not equal to "Error". Then, it groups the tibble's summary statistics by Division and Year_Date
+```{r}
+plot.state <- function(df, values = "Enrollment"){
+  G <- ggplot(df |> 
+    #remove the "ERROR" setting
+    filter(Division != "Error") |>
+    #Use get(var_name) to reference the var_name in your call to mean(): mean(get(var_name))
+    #For this, think group_by along with summarize
+    group_by(Year_Date) |>
+    summarize("mean_enrollment" = mean(get(values))))
+
+#create a line plot with ggplot with appropriate aes() assignments
+G + geom_line(aes(x = Year_Date, y = mean_enrollment))
+}
+
+# Test running the code (to be deleted later)
+plot.state(edu_a$`Non-County Data`)
+```
+
 
