@@ -163,7 +163,7 @@ combined_lists <- combine_both(edu_a,edu_b)
 ```
 
 ## plot.state function
-This function plots the mean values of enrollment by year for each Division, after removing the Divisions with Error values. First, the function filters out the Division values not equal to "Error". Then, it groups the tibble's summary statistics by Division and Year_Date
+This function plots the mean values of enrollment by year for each Division, after removing the Divisions with Error values. First, the function filters to remove the Division of "Error". Then, it groups the tibble's summary statistics by Division and Year_Date. Finally, it gets the mean of each divisionand year and then plots them with the x axis representing the year and the y axis representing the Mean Enrollment.
 ```{r}
 plot.state <- function(df, values = "Enrollment"){
   G <- ggplot(df |> 
@@ -171,14 +171,17 @@ plot.state <- function(df, values = "Enrollment"){
     filter(Division != "Error") |>
     #Use get function to reference the variable in your call to mean(): mean(get(values))
     group_by(Division, Year_Date) |>
-    summarize("mean_enrollment" = mean(get(values))),
-  aes(x = Year_Date, y = mean_enrollment, color = Division, linetype = Division))
+    summarize("mean_data" = mean(get(values))),
+  aes(x = Year_Date, y = mean_data, color = Division, linetype = Division))
 #create a line plot with ggplot with appropriate aes() assignments
-G + geom_line() + labs(x = "Year", y = "Mean Enrollment", title = "Mean Enrollment by Division over Time")
+G + geom_line() + labs(x = "Year", y = paste("Mean", values), title = paste("Mean",values, "by Division over Time"))
 }
 
+<<<<<<< HEAD
 # Test running the code (to be deleted later)
 plot(edu_a$`Non-County Data`)
+=======
+>>>>>>> 7c9f5c5e816049f5a9f4ed8644bd727d0bc73bdb
 ```
 
 ## plot.county Function
@@ -212,4 +215,50 @@ plot.county <- function(df, values = "Enrollment", input_state = "NC", choice = 
 # Test running the code (to be deleted later)
 plot(edu_a$`County Data`, input_state = "PA", choice = "top", num_obs = 10)
 ```
+<<<<<<< HEAD
 Right now the function only outputs the tibble that we will use to graph. Asked clarifying question in Moodle forum about what exactly the plot should look like
+=======
+
+# Put It Together
+```{r, message = FALSE}
+#Run data processing function on two given URLs. Used default for Enrollment column name.
+edu_a <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv")
+
+edu_b <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv")
+
+#Run combining function to put into a list with two data frames.
+combo_list <- combine_both(edu_a, edu_b)
+
+#Plot function on state dataframe.
+plot.state(combo_list[[2]])
+
+#Insert county stuff here.
+
+
+#Read in similar datasets using data processing function.
+pst_a <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/PST01a.csv", values = "Population")
+
+pst_b <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/PST01b.csv", values = "Population")
+
+pst_c <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/PST01c.csv", values = "Population")
+
+pst_d <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/PST01d.csv", values = "Population")
+
+
+#Run data combining function three times to put into one object.
+a_and_b <- combine_both(pst_a, pst_b)
+
+a_b_c<- combine_both(a_and_b, pst_c)
+
+all_combo <- combine_both(a_b_c, pst_d)
+
+#Plot state data frame
+plot.state(all_combo[[2]], values = "Population")
+
+#Insert county stuff.
+
+```
+
+
+
+>>>>>>> 7c9f5c5e816049f5a9f4ed8644bd727d0bc73bdb
