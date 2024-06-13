@@ -2,6 +2,8 @@
 title: "ST 558 Project 1"
 format: html
 author: "Taylor Cesarski and Trevor Lynch"
+editor_options: 
+  chunk_output_type: console
 ---
 ```{r, echo = FALSE, message = FALSE}
 library(tidyverse)
@@ -176,23 +178,24 @@ G + geom_line() + labs(x = "Year", y = "Mean Enrollment", title = "Mean Enrollme
 }
 
 # Test running the code (to be deleted later)
-plot.state(edu_a$`Non-County Data`)
+plot(edu_a$`Non-County Data`)
 ```
+
 ## plot.county Function
-This function will take in a tibble/dataframe, along with a specific state (specified with a 2-character string), conditional logic to choose the head(, n = ) or tail(, n = ) of the dataframe 
+This function will take in a tibble/dataframe, along with a specific state (specified with a 2-character string), a choice of whether we want the areas with the highest enrollment or lowest, and how many of these areas we want to see. From there it will subset the data by specified state, determine the average enrollment for that area from 1987 to 1996. Plots _____ 
 ```{r}
 plot.county <- function(df, values = "Enrollment", input_state = "NC", choice = "top", num_obs = 5){
   if (choice == "top"){
     df |>
-    # Filter the data to only include observations from the state specified
-    filter(State == input_state) |>
-    # Find the mean enrollment for each Area_name and sort these values in descending order
-    group_by(area_name) |>
-    summarize("mean_enrollment" = mean(get(values))) |>
-    arrange(desc(mean_enrollment)) |>
-    # Obtain the top/bottom x number of area_name's depending on num_obs input 
-    head(n = num_obs)
-  } else {
+      # Filter the data to only include observations from the state specified
+      filter(State == input_state) |>
+      # Find the mean enrollment for each Area_name and sort these values in descending order
+      group_by(area_name) |>
+      summarize("mean_enrollment" = mean(get(values))) |>
+      arrange(desc(mean_enrollment)) |>
+      # Obtain the top/bottom x number of area_name's depending on num_obs input 
+      head(n = num_obs)
+  } else if (choice == "bottom") {
     df |>
     # Filter the data to only include observations from the state specified
     filter(State == input_state) |>
@@ -202,9 +205,11 @@ plot.county <- function(df, values = "Enrollment", input_state = "NC", choice = 
     arrange(mean_enrollment) |>
     # Obtain the top/bottom x number of area_name's depending on num_obs input 
     head(n = num_obs)
+  } else {
+    paste("Error - choice input was not either 'top' or 'bottom'")
   }
 }
 # Test running the code (to be deleted later)
-plot.county(edu_a$`County Data`, input_state = "NC", choice = "bott", num_obs = 25)
+plot(edu_a$`County Data`, input_state = "PA", choice = "top", num_obs = 10)
 ```
-
+Right now the function only outputs the tibble that we will use to graph. Asked clarifying question in Moodle forum about what exactly the plot should look like
