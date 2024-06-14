@@ -234,20 +234,18 @@ combo_list <- combine_both(edu_a, edu_b)
 #Plot function on state dataframe.
 plot.state(combo_list[[2]])
 
-#Insert county stuff here.
-#Top 20 NC Counties
+#Plot function on the county data.
+#Top 20 NC Counties for Enrollment
 plot.county(combo_list[[1]], "Enrollment", "NC", "top", 20)
 
-#Bottom 7 SC Counties
+#Bottom 7 SC Counties for Enrollment
 plot.county(combo_list[[1]], "Enrollment", "SC", "bottom", 7)
 
-#Defaults
+#Defaults (Top 5 NC Counties for Enrollment)
 plot.county(combo_list[[1]])
 
-#Top 8 PA Counties
+#Top 8 PA Counties for Enrollment
 plot.county(combo_list[[1]], "Enrollment", "PA", "top", 8)
-
-
 
 #Read in similar datasets using data processing function.
 pst_a <- wrapper_function("https://www4.stat.ncsu.edu/~online/datasets/PST01a.csv", values = "Population")
@@ -269,18 +267,19 @@ all_combo <- combine_both(a_b_c, pst_d)
 #Plot state data frame
 plot.state(all_combo[[2]], values = "Population")
 
-#Insert county stuff.
-
+#Plot function on the county data.
+#Top 15 CA Counties for Population
 plot.county(all_combo[[1]], "Population", "CA", "top", 15)
+
+#Top 4 TX Counties for Population
 plot.county(all_combo[[1]], "Population", "TX", "top", 4)
 
 
-#Need defaults
-plot.county(all_combo[[1]])
+#Defaults, except for values being Population (Top 5 NC Counties for Population)
+plot.county(all_combo[[1]], "Population")
 
+#Top 10 NY Counties for Population
 plot.county(all_combo[[1]], "Population", "NY", "top", 10)
-
-
 
 
 ```
