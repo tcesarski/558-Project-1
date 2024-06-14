@@ -87,13 +87,14 @@ add_division <- function(data_input){
                        ifelse(data_input$area_name[i] %in% c("IOWA", "KANSAS", "MINNESOTA", "MISSOURI", "NEBRASKA", "NORTH DAKOTA", "SOUTH DAKOTA"), "West North Central",
                               ifelse(data_input$area_name[i] %in% c("DELAWARE", "FLORIDA", "GEORGIA", "MARYLAND", "NORTH CAROLINA", "SOUTH CAROLINA", "VIRGINIA", "DISTRICT OF COLUMBIA", "District of Columbia", "WEST VIRGINIA"), "South Atlantic",
                                      ifelse(data_input$area_name[i] %in% c("ALABAMA", "KENTUCKY", "MISSISSIPPI", "TENNESSEE"), "East South Central",
-                                            ifelse(data_input$area_name[i] %in% c("ARKANSAS", "LOUSIANA", "OKLAHOMA", "TEXAS"), "West South Central",
+                                            ifelse(data_input$area_name[i] %in% c("ARKANSAS", "LOUISIANA", "OKLAHOMA", "TEXAS"), "West South Central",
                                                    ifelse(data_input$area_name[i] %in% c("ARIZONA", "COLORADO", "IDAHO", "MONTANA", "NEVADA", "NEW MEXICO", "UTAH", "WYOMING"), "Mountain",
                                                           ifelse(data_input$area_name[i] %in% c("ALASKA", "CALIFORNIA", "HAWAII", "OREGON", "WASHINGTON"), "Pacific",
            "Error")))))))))
   }
 return(data_input |>
   mutate(Division = division))
+  filter(area_name != "District of Columbia")
   
 }
 ```
@@ -177,47 +178,48 @@ plot.state <- function(df, values = "Enrollment"){
 G + geom_line() + labs(x = "Year", y = paste("Mean", values), title = paste("Mean",values, "by Division over Time"))
 }
 
-<<<<<<< HEAD
-# Test running the code (to be deleted later)
-plot(edu_a$`Non-County Data`)
-=======
->>>>>>> 7c9f5c5e816049f5a9f4ed8644bd727d0bc73bdb
 ```
 
 ## plot.county Function
-This function will take in a tibble/dataframe, along with a specific state (specified with a 2-character string), a choice of whether we want the areas with the highest enrollment or lowest, and how many of these areas we want to see. From there it will subset the data by specified state, determine the average enrollment for that area from 1987 to 1996. Plots _____ 
+This function will take in a tibble/dataframe, along with a specific state (specified with a 2-character string), a choice of whether we want the areas with the highest enrollment or lowest, and how many of these areas we want to see. From there it will subset the data by specified state, determine the average enrollment for that area from 1987 to 1996. 
 ```{r}
 plot.county <- function(df, values = "Enrollment", input_state = "NC", choice = "top", num_obs = 5){
   if (choice == "top"){
-    df |>
-      # Filter the data to only include observations from the state specified
+    new_df <- df |>
+       #Filter the data to only include observations from the state specified
       filter(State == input_state) |>
-      # Find the mean enrollment for each Area_name and sort these values in descending order
+       #Find the mean enrollment for each area_name and sort these values in descending order
       group_by(area_name) |>
       summarize("mean_enrollment" = mean(get(values))) |>
       arrange(desc(mean_enrollment)) |>
-      # Obtain the top/bottom x number of area_name's depending on num_obs input 
+       #Obtain the top/bottom x number of area_name's depending on num_obs input 
       head(n = num_obs)
   } else if (choice == "bottom") {
-    df |>
-    # Filter the data to only include observations from the state specified
+    new_df <- df |>
+     #Filter the data to only include observations from the state specified
     filter(State == input_state) |>
-    # Find the mean enrollment for each Area_name and sort these values in ascensing order
+     #Find the mean enrollment for each Area_name and sort these values in ascensing order
     group_by(area_name) |>
     summarize("mean_enrollment" = mean(get(values))) |>
     arrange(mean_enrollment) |>
-    # Obtain the top/bottom x number of area_name's depending on num_obs input 
+     #Obtain the top/bottom x number of area_name's depending on num_obs input 
     head(n = num_obs)
   } else {
     paste("Error - choice input was not either 'top' or 'bottom'")
   }
+  joined_data <- right_join(df,new_df, by = "area_name")
+
+  title <- paste("Mean", values, "by year for", choice, num_obs, input_state, "counties")
+g <- ggplot(joined_data, aes(x= Year_Date, y= get(values), group = area_name, color = area_name))
+g + geom_line() +
+   labs(title = title, x = "Year", y = paste("Mean ", values), color = "County Name")
 }
-# Test running the code (to be deleted later)
-plot(edu_a$`County Data`, input_state = "PA", choice = "top", num_obs = 10)
+  
+#Check to see if working.
+plot.county(combined_lists[[1]], "Enrollment", "NC", "top", 5)
+
+
 ```
-<<<<<<< HEAD
-Right now the function only outputs the tibble that we will use to graph. Asked clarifying question in Moodle forum about what exactly the plot should look like
-=======
 
 # Put It Together
 ```{r, message = FALSE}
@@ -233,6 +235,18 @@ combo_list <- combine_both(edu_a, edu_b)
 plot.state(combo_list[[2]])
 
 #Insert county stuff here.
+#Top 20 NC Counties
+plot.county(combo_list[[1]], "Enrollment", "NC", "top", 20)
+
+#Bottom 7 SC Counties
+plot.county(combo_list[[1]], "Enrollment", "SC", "bottom", 7)
+
+#Defaults
+plot.county(combo_list[[1]])
+
+#Top 8 PA Counties
+plot.county(combo_list[[1]], "Enrollment", "PA", "top", 8)
+
 
 
 #Read in similar datasets using data processing function.
@@ -257,8 +271,16 @@ plot.state(all_combo[[2]], values = "Population")
 
 #Insert county stuff.
 
+plot.county(all_combo[[1]], "Population", "CA", "top", 15)
+plot.county(all_combo[[1]], "Population", "TX", "top", 4)
+
+
+#Need defaults
+plot.county(all_combo[[1]])
+
+plot.county(all_combo[[1]], "Population", "NY", "top", 10)
+
+
+
+
 ```
-
-
-
->>>>>>> 7c9f5c5e816049f5a9f4ed8644bd727d0bc73bdb

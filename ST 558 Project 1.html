@@ -183,15 +183,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">ifelse</span>(data_input<span class="sc">$</span>area_name[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"IOWA"</span>, <span class="st">"KANSAS"</span>, <span class="st">"MINNESOTA"</span>, <span class="st">"MISSOURI"</span>, <span class="st">"NEBRASKA"</span>, <span class="st">"NORTH DAKOTA"</span>, <span class="st">"SOUTH DAKOTA"</span>), <span class="st">"West North Central"</span>,</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">ifelse</span>(data_input<span class="sc">$</span>area_name[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"DELAWARE"</span>, <span class="st">"FLORIDA"</span>, <span class="st">"GEORGIA"</span>, <span class="st">"MARYLAND"</span>, <span class="st">"NORTH CAROLINA"</span>, <span class="st">"SOUTH CAROLINA"</span>, <span class="st">"VIRGINIA"</span>, <span class="st">"DISTRICT OF COLUMBIA"</span>, <span class="st">"District of Columbia"</span>, <span class="st">"WEST VIRGINIA"</span>), <span class="st">"South Atlantic"</span>,</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                                     <span class="fu">ifelse</span>(data_input<span class="sc">$</span>area_name[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ALABAMA"</span>, <span class="st">"KENTUCKY"</span>, <span class="st">"MISSISSIPPI"</span>, <span class="st">"TENNESSEE"</span>), <span class="st">"East South Central"</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                            <span class="fu">ifelse</span>(data_input<span class="sc">$</span>area_name[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ARKANSAS"</span>, <span class="st">"LOUSIANA"</span>, <span class="st">"OKLAHOMA"</span>, <span class="st">"TEXAS"</span>), <span class="st">"West South Central"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                            <span class="fu">ifelse</span>(data_input<span class="sc">$</span>area_name[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ARKANSAS"</span>, <span class="st">"LOUISIANA"</span>, <span class="st">"OKLAHOMA"</span>, <span class="st">"TEXAS"</span>), <span class="st">"West South Central"</span>,</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                                                   <span class="fu">ifelse</span>(data_input<span class="sc">$</span>area_name[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ARIZONA"</span>, <span class="st">"COLORADO"</span>, <span class="st">"IDAHO"</span>, <span class="st">"MONTANA"</span>, <span class="st">"NEVADA"</span>, <span class="st">"NEW MEXICO"</span>, <span class="st">"UTAH"</span>, <span class="st">"WYOMING"</span>), <span class="st">"Mountain"</span>,</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                                                          <span class="fu">ifelse</span>(data_input<span class="sc">$</span>area_name[i] <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ALASKA"</span>, <span class="st">"CALIFORNIA"</span>, <span class="st">"HAWAII"</span>, <span class="st">"OREGON"</span>, <span class="st">"WASHINGTON"</span>), <span class="st">"Pacific"</span>,</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Error"</span>)))))))))</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(data_input <span class="sc">|&gt;</span></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Division =</span> division))</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(area_name <span class="sc">!=</span> <span class="st">"District of Columbia"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="step-4-function-with-calling-steps-5-6-function" class="level2">
@@ -345,92 +346,103 @@ $`Non-County Data`
 </section>
 <section id="plot.county-function" class="level2">
 <h2 class="anchored" data-anchor-id="plot.county-function">plot.county Function</h2>
-<p>This function will take in a tibble/dataframe, along with a specific state (specified with a 2-character string), conditional logic to choose the head(, n = ) or tail(, n = ) of the dataframe</p>
+<p>This function will take in a tibble/dataframe, along with a specific state (specified with a 2-character string), a choice of whether we want the areas with the highest enrollment or lowest, and how many of these areas we want to see. From there it will subset the data by specified state, determine the average enrollment for that area from 1987 to 1996.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plot.county <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">values =</span> <span class="st">"Enrollment"</span>, <span class="at">input_state =</span> <span class="st">"NC"</span>, <span class="at">choice =</span> <span class="st">"top"</span>, <span class="at">num_obs =</span> <span class="dv">5</span>){</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (choice <span class="sc">==</span> <span class="st">"top"</span>){</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    df <span class="sc">|&gt;</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter the data to only include observations from the state specified</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(State <span class="sc">==</span> input_state) <span class="sc">|&gt;</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find the mean enrollment for each Area_name and sort these values in descending order</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(area_name) <span class="sc">|&gt;</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="st">"mean_enrollment"</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="fu">get</span>(values))) <span class="sc">|&gt;</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_enrollment)) <span class="sc">|&gt;</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Obtain the top/bottom x number of area_name's depending on num_obs input </span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="at">n =</span> num_obs)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    df <span class="sc">|&gt;</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter the data to only include observations from the state specified</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    new_df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>       <span class="co">#Filter the data to only include observations from the state specified</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(State <span class="sc">==</span> input_state) <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>       <span class="co">#Find the mean enrollment for each area_name and sort these values in descending order</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">group_by</span>(area_name) <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summarize</span>(<span class="st">"mean_enrollment"</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="fu">get</span>(values))) <span class="sc">|&gt;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_enrollment)) <span class="sc">|&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>       <span class="co">#Obtain the top/bottom x number of area_name's depending on num_obs input </span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">head</span>(<span class="at">n =</span> num_obs)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (choice <span class="sc">==</span> <span class="st">"bottom"</span>) {</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    new_df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>     <span class="co">#Filter the data to only include observations from the state specified</span></span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(State <span class="sc">==</span> input_state) <span class="sc">|&gt;</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find the mean enrollment for each Area_name and sort these values in ascensing order</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>     <span class="co">#Find the mean enrollment for each Area_name and sort these values in ascensing order</span></span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(area_name) <span class="sc">|&gt;</span></span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="st">"mean_enrollment"</span> <span class="ot">=</span> <span class="fu">mean</span>(<span class="fu">get</span>(values))) <span class="sc">|&gt;</span></span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(mean_enrollment) <span class="sc">|&gt;</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Obtain the top/bottom x number of area_name's depending on num_obs input </span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>     <span class="co">#Obtain the top/bottom x number of area_name's depending on num_obs input </span></span>
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="at">n =</span> num_obs)</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Test running the code (to be deleted later)</span></span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.county</span>(edu_a<span class="sc">$</span><span class="st">`</span><span class="at">County Data</span><span class="st">`</span>, <span class="at">input_state =</span> <span class="st">"NC"</span>, <span class="at">choice =</span> <span class="st">"bott"</span>, <span class="at">num_obs =</span> <span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 25 × 2
-   area_name      mean_enrollment
-   &lt;chr&gt;                    &lt;dbl&gt;
- 1 Tyrrell, NC               761.
- 2 Hyde, NC                  874.
- 3 Camden, NC               1114.
- 4 Clay, NC                 1208.
- 5 Graham, NC               1290.
- 6 Alleghany, NC            1547.
- 7 Jones, NC                1612.
- 8 Swain, NC                1623.
- 9 Gates, NC                1728.
-10 Perquimans, NC           1905.
-# ℹ 15 more rows</code></pre>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(<span class="st">"Error - choice input was not either 'top' or 'bottom'"</span>)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  joined_data <span class="ot">&lt;-</span> <span class="fu">right_join</span>(df,new_df, <span class="at">by =</span> <span class="st">"area_name"</span>)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  title <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Mean"</span>, values, <span class="st">"by year for"</span>, choice, num_obs, input_state, <span class="st">"counties"</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(joined_data, <span class="fu">aes</span>(<span class="at">x=</span> Year_Date, <span class="at">y=</span> <span class="fu">get</span>(values), <span class="at">group =</span> area_name, <span class="at">color =</span> area_name))</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>g <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>   <span class="fu">labs</span>(<span class="at">title =</span> title, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="fu">paste</span>(<span class="st">"Mean "</span>, values), <span class="at">color =</span> <span class="st">"County Name"</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#Check to see if working.</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.county</span>(combined_lists[[<span class="dv">1</span>]], <span class="st">"Enrollment"</span>, <span class="st">"NC"</span>, <span class="st">"top"</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ST-558-Project-1_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 <section id="put-it-together" class="level1">
 <h1>Put It Together</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Run data processing function on two given URLs. Used default for Enrollment column name.</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>edu_a <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>edu_b <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Run combining function to put into a list with two data frames.</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>combo_list <span class="ot">&lt;-</span> <span class="fu">combine_both</span>(edu_a, edu_b)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot function on state dataframe.</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.state</span>(combo_list[[<span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Run data processing function on two given URLs. Used default for Enrollment column name.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>edu_a <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/EDU01a.csv"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>edu_b <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/EDU01b.csv"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Run combining function to put into a list with two data frames.</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>combo_list <span class="ot">&lt;-</span> <span class="fu">combine_both</span>(edu_a, edu_b)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot function on state dataframe.</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.state</span>(combo_list[[<span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="ST-558-Project-1_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Insert county stuff here.</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Read in similar datasets using data processing function.</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>pst_a <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01a.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>pst_b <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01b.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>pst_c <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01c.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>pst_d <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01d.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Run data combining function three times to put into one object.</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>a_and_b <span class="ot">&lt;-</span> <span class="fu">combine_both</span>(pst_a, pst_b)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>a_b_c<span class="ot">&lt;-</span> <span class="fu">combine_both</span>(a_and_b, pst_c)</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>all_combo <span class="ot">&lt;-</span> <span class="fu">combine_both</span>(a_b_c, pst_d)</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot state data frame</span></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.state</span>(all_combo[[<span class="dv">2</span>]], <span class="at">values =</span> <span class="st">"Population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Insert county stuff here.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Top 20 NC Counties</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.county</span>(combo_list[[<span class="dv">1</span>]], <span class="st">"Enrollment"</span>, <span class="st">"NC"</span>, <span class="st">"top"</span>, <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="ST-558-Project-1_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Bottom 7 SC Counties</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plot.county(combo_list[[1]], "SC", "bottom", "Enrollment", 7)</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Defaults</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#plot.county(combo_list[[1]])</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Top 8 PA Counties</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plot.county(combo_list[[1]], "PA", "top", "Enrollment", 8)</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Read in similar datasets using data processing function.</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>pst_a <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01a.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>pst_b <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01b.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>pst_c <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01c.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>pst_d <span class="ot">&lt;-</span> <span class="fu">wrapper_function</span>(<span class="st">"https://www4.stat.ncsu.edu/~online/datasets/PST01d.csv"</span>, <span class="at">values =</span> <span class="st">"Population"</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#Run data combining function three times to put into one object.</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>a_and_b <span class="ot">&lt;-</span> <span class="fu">combine_both</span>(pst_a, pst_b)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>a_b_c<span class="ot">&lt;-</span> <span class="fu">combine_both</span>(a_and_b, pst_c)</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>all_combo <span class="ot">&lt;-</span> <span class="fu">combine_both</span>(a_b_c, pst_d)</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot state data frame</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.state</span>(all_combo[[<span class="dv">2</span>]], <span class="at">values =</span> <span class="st">"Population"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ST-558-Project-1_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Insert county stuff.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 
