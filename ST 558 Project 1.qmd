@@ -189,7 +189,7 @@ plot.state <- function(df, values = "Enrollment"){
   G <- ggplot(df |> 
     #Remove the "ERROR" Division values
     filter(Division != "Error") |>
-    #Group by division & year and then se get function to reference values   variable.
+    #Group by division & year and then se get function to reference values variable.
     group_by(Division, Year_Date) |>
     summarize("mean_data" = mean(get(values))),
     #Add global aesthetics.
