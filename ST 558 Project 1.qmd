@@ -5,7 +5,7 @@ author: "Taylor Cesarski and Trevor Lynch"
 editor_options: 
   chunk_output_type: console
 ---
-```{r, echo = FALSE, message = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
 ```
 # Data Processing Functions
@@ -262,16 +262,16 @@ plot.state(combo_list[[2]])
 
 #Plot function on the county data.
 #Top 20 NC Counties for Enrollment
-plot.county(combo_list[[1]], "Enrollment", "NC", "top", 20)
+plot(combo_list[[1]], "Enrollment", "NC", "top", 20)
 
 #Bottom 7 SC Counties for Enrollment
-plot.county(combo_list[[1]], "Enrollment", "SC", "bottom", 7)
+plot(combo_list[[1]], "Enrollment", "SC", "bottom", 7)
 
 #Defaults (Top 5 NC Counties for Enrollment)
-plot.county(combo_list[[1]])
+plot(combo_list[[1]])
 
 #Top 8 PA Counties for Enrollment
-plot.county(combo_list[[1]], "Enrollment", "PA", "top", 8)
+plot(combo_list[[1]], "Enrollment", "PA", "top", 8)
 
 #Read in similar datasets using data processing function.
 pst_a <- wrap_all("https://www4.stat.ncsu.edu/~online/datasets/PST01a.csv", values = "Population")
@@ -292,20 +292,19 @@ a_b_c<- combine_both(a_and_b, pst_c)
 all_combo <- combine_both(a_b_c, pst_d)
 
 #Plot state data frame
-plot.state(all_combo[[2]], values = "Population")
+plot(all_combo[[2]], values = "Population")
 
 #Plot function on the county data.
 
 #Top 15 CA Counties for Population
-plot.county(all_combo[[1]], "Population", "CA", "top", 15)
+plot(all_combo[[1]], "Population", "CA", "top", 15)
 
 #Top 4 TX Counties for Population
-plot.county(all_combo[[1]], "Population", "TX", "top", 4)
-
+plot(all_combo[[1]], "Population", "TX", "top", 4)
 
 #Defaults, except for values being Population (Top 5 NC Counties for Population)
-plot.county(all_combo[[1]], "Population")
+plot(all_combo[[1]], "Population")
 
 #Top 10 NY Counties for Population
-plot.county(all_combo[[1]], "Population", "NY", "top", 10)
+plot(all_combo[[1]], "Population", "NY", "top", 10)
 ```
