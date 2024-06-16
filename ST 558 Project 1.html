@@ -128,9 +128,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="step-3-function" class="level2">
 <h2 class="anchored" data-anchor-id="step-3-function">Step 3 Function</h2>
-<p>This is a function called add_year_function that takes in new_df (the output of the previous function). It initializes a numeric vector of length of the number of rows of the input, new_df. Then, using a for loop it loops through all iterations of the time column of the new_df and takes the 8th and 9th strings. Then it takes that value and converts it to a numeric variable. Then, if that number is less than 20, it adds 2000 so for example if the number was 03 it would change to 2003. Otherwise, add 1900 to get something like 1997. Since there are no data values in the 1920s or earlier, this pattern will hold. It is storing each of these values in the initial vector created.</p>
+<p>This is a function called add_year that takes in new_df (the output of the previous function). It initializes a numeric vector of length of the number of rows of the input, new_df. Then, using a for loop it loops through all iterations of the time column of the new_df and takes the 8th and 9th strings. Then it takes that value and converts it to a numeric variable. Then, if that number is less than 20, it adds 2000 so for example if the number was 03 it would change to 2003. Otherwise, add 1900 to get something like 1997. Since there are no data values in the 1920s or earlier, this pattern will hold. It is storing each of these values in the initial vector created.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>add_year_function <span class="ot">&lt;-</span> <span class="cf">function</span>(new_df){</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>add_year <span class="ot">&lt;-</span> <span class="cf">function</span>(new_df){</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Initialize numeric vector of length of number of rows.</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  Year_Date <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(new_df))</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Create a for loop.</span></span>
@@ -248,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wrap_all <span class="ot">&lt;-</span> <span class="cf">function</span>(url, <span class="at">values =</span> <span class="st">"Enrollment"</span>){</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(url) <span class="sc">|&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy_data</span>(values) <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_year_function</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_year</span>() <span class="sc">|&gt;</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_new_tibbles</span>()</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -500,7 +500,7 @@ $`Non-County Data`
 # ℹ 1,029 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot function on state dataframe.</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.state</span>(combo_list[[<span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(combo_list[[<span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="ST-558-Project-1_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>

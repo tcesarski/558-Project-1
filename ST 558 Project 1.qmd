@@ -2,8 +2,6 @@
 title: "ST 558 Project 1"
 format: html
 author: "Taylor Cesarski and Trevor Lynch"
-editor_options: 
-  chunk_output_type: console
 ---
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
@@ -32,9 +30,9 @@ tidy_data <- function(data, values = "Enrollment"){
 ```
 
 ## Step 3 Function 
-This is a function called add_year_function that takes in new_df (the output of the previous function). It initializes a numeric vector of length of the number of rows of the input, new_df. Then, using a for loop it loops through all iterations of the time column of the new_df and takes the 8th and 9th strings. Then it takes that value and converts it to a numeric variable. Then, if that number is less than 20, it adds 2000 so for example if the number was 03 it would change to 2003. Otherwise, add 1900 to get something like 1997. Since there are no data values in the 1920s or earlier, this pattern will hold. It is storing each of these values in the initial vector created. 
+This is a function called add_year that takes in new_df (the output of the previous function). It initializes a numeric vector of length of the number of rows of the input, new_df. Then, using a for loop it loops through all iterations of the time column of the new_df and takes the 8th and 9th strings. Then it takes that value and converts it to a numeric variable. Then, if that number is less than 20, it adds 2000 so for example if the number was 03 it would change to 2003. Otherwise, add 1900 to get something like 1997. Since there are no data values in the 1920s or earlier, this pattern will hold. It is storing each of these values in the initial vector created. 
 ```{r}
-add_year_function <- function(new_df){
+add_year <- function(new_df){
   #Initialize numeric vector of length of number of rows.
   Year_Date <- numeric(nrow(new_df))
   #Create a for loop.
@@ -148,7 +146,7 @@ This creates the wrapper function called wrapper_function that has the default v
 wrap_all <- function(url, values = "Enrollment"){
   result <- read_csv(url) |>
     tidy_data(values) |>
-    add_year_function() |>
+    add_year() |>
     get_new_tibbles()
 }
 ```
@@ -258,7 +256,7 @@ combo_list <- combine_both(edu_a, edu_b)
 combo_list
 
 #Plot function on state dataframe.
-plot.state(combo_list[[2]])
+plot(combo_list[[2]])
 
 #Plot function on the county data.
 #Top 20 NC Counties for Enrollment
